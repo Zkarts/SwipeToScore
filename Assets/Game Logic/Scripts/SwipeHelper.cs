@@ -10,29 +10,20 @@ public class SwipeHelper : MonoBehaviour {
 
     //gets called with screenSpaceDirection and screenSpacePosition
     public event Action<Vector2, Vector2> OnSwipe;
+    public event Action OnRelease;
 
     [SerializeField]
-    private float screenWidthFactorForSwipe = 0.25f, swipeTimeThreshold = 1f;
+    private float screenWidthFactorForSwipe = 0.25f, swipeTimeThreshold = 0.2f;
 
     private float swipeDistanceThreshold = 0f;
-    private float velocity = 0f;
-    private Vector2 prevPosition;
-    private bool swiping = false;
 
-
-
-
-
-    public TextMeshProUGUI debugText;
-
-
-
-
+    private Vector2 startPos;
+    private float holdTime = 0;
 
     private void Start() {
         //use factor of screen width instead of set value for scalability
         swipeDistanceThreshold = Screen.width * screenWidthFactorForSwipe;
-        Debug.Log(swipeDistanceThreshold);
+        //Debug.Log(swipeDistanceThreshold);
     }
 
     private void Update() {
@@ -42,7 +33,6 @@ public class SwipeHelper : MonoBehaviour {
 #elif   UNITY_ANDROID || UNITY_IOS
         CheckSwipeTouch();
 #endif
-        UpdateTimer();
     }
 
     private void CheckSwipeTouch() {
@@ -51,15 +41,22 @@ public class SwipeHelper : MonoBehaviour {
 
             switch (touch.phase) {
                 case TouchPhase.Began:
+                    startPos = touch.position;
+                    holdTime = 0;
                     break;
                 case TouchPhase.Moved:
-                    swiping = touch.deltaPosition.magnitude > swipeDistanceThreshold;
+                    holdTime += Time.deltaTime;
                     break;
                 case TouchPhase.Stationary:
                     break;
                 case TouchPhase.Ended:
-                    if (swiping) {
-                        OnSwipe?.Invoke(touch.deltaPosition, touch.position);
+                    Vector2 endPos = touch.position;
+                    Vector2 deltaPos = endPos - startPos;
+                    if (deltaPos.magnitude > swipeDistanceThreshold && holdTime < swipeTimeThreshold) {
+                        OnSwipe?.Invoke(deltaPos, endPos);
+                    }
+                    else {
+                        OnRelease?.Invoke();
                     }
                     break;
                 case TouchPhase.Canceled:
@@ -68,50 +65,28 @@ public class SwipeHelper : MonoBehaviour {
                     break;
             }
         }
-        debugText.text = "swiping: " + swiping;
     }
 
     private void CheckSwipeEditor() {
         if (Input.GetMouseButtonDown(0)) { //pressed
-            prevPosition = Input.mousePosition;
+            startPos = Input.mousePosition;
+            holdTime = 0;
         }
         else if (Input.GetMouseButton(0)) { //held
-            Vector2 newPosition = Input.mousePosition;
-            Vector2 deltaPos = newPosition - prevPosition;
-            swiping = deltaPos.magnitude > swipeDistanceThreshold;
-            prevPosition = Input.mousePosition;
+            holdTime += Time.deltaTime;
         }
         else if (Input.GetMouseButtonUp(0)) { //de-pressed
-            if (swiping) {
-                Vector2 newPosition = Input.mousePosition;
-                Vector2 deltaPos = newPosition - prevPosition;
-                OnSwipe?.Invoke(deltaPos, newPosition);
+            Vector2 endPos = Input.mousePosition;
+            Vector2 deltaPos = endPos - startPos;
+
+            //Debug.Log("" + (deltaPos.magnitude > swipeDistanceThreshold) + " and " + (holdTime < swipeTimeThreshold));
+            if (deltaPos.magnitude > swipeDistanceThreshold && holdTime < swipeTimeThreshold) {
+                OnSwipe?.Invoke(deltaPos, endPos);
+            }
+            else {
+                OnRelease?.Invoke();
             }
         }
-        debugText.text = "swiping: " + swiping;
     }
 
-
-
-
-    float deltaTime = 0.0f;
-
-    void UpdateTimer() {
-        deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
-    }
-
-    void OnGUI() {
-        int w = Screen.width, h = Screen.height;
-
-        GUIStyle style = new GUIStyle();
-
-        Rect rect = new Rect(0, 0, w, h * 2 / 100);
-        style.alignment = TextAnchor.UpperLeft;
-        style.fontSize = h * 2 / 100;
-        style.normal.textColor = new Color(0.0f, 0.0f, 0.5f, 1.0f);
-        float msec = deltaTime * 1000.0f;
-        float fps = 1.0f / deltaTime;
-        string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);
-        GUI.Label(rect, text, style);
-    }
 }

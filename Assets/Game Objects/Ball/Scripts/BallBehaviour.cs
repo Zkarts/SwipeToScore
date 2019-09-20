@@ -6,18 +6,22 @@ using UnityEngine;
 public class BallBehaviour : MonoBehaviour {
 
     [SerializeField]
+    private LayerMask fieldLayer;
+
+    [SerializeField]
     private float pushPower = 500;
 
     public event Action OnShoot;
 
     private GameHandler gameHandler;
+    private BallCanvas ballCanvas;
     private SwipeHelper swipeHelper;
     private BoxCollider goalTrigger;
     private Rigidbody ballRigidbody;
     private Camera mainCamera;
-    private bool shot = false;
+    private bool holdingBall = false, alreadyShot = false;
 
-    public void Init(GameHandler gameHandler, SwipeHelper swipeHelper, BoxCollider goalTrigger, Camera mainCamera) {
+    public void Init(GameHandler gameHandler, BallCanvas ballCanvas, SwipeHelper swipeHelper, BoxCollider goalTrigger, Camera mainCamera) {
         this.gameHandler = gameHandler;
         this.swipeHelper = swipeHelper;
         this.goalTrigger = goalTrigger;
@@ -26,6 +30,12 @@ public class BallBehaviour : MonoBehaviour {
         ballRigidbody = GetComponent<Rigidbody>();
 
         swipeHelper.OnSwipe += Shoot;
+        swipeHelper.OnRelease += ReleaseBall;
+
+        this.ballCanvas = ballCanvas;
+        ballCanvas.Init(this);
+        ballCanvas.Activate();
+        ballCanvas.OnSelect += SetBallHeld;
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -34,15 +44,30 @@ public class BallBehaviour : MonoBehaviour {
         }
     }
 
+    private void SetBallHeld() {
+        holdingBall = true;
+    }
+
+    private void ReleaseBall() {
+        holdingBall = false;
+    }
+
     private void Shoot(Vector2 screenSpaceDirection, Vector2 screenSpacePosition) {
-        if (shot) {
+        if (!holdingBall) {
+            Debug.LogError("wasn't holding ball");
+            return;
+        }
+
+        if (alreadyShot) {
+            Debug.LogError("already shot");
             return;
         }
 
         Ray endPosRay = mainCamera.ScreenPointToRay(screenSpacePosition);
-
         RaycastHit endPosHit;
-        if (!Physics.Raycast(endPosRay, out endPosHit, LayerMask.NameToLayer("Field"))) {
+
+        if (!Physics.Raycast(endPosRay, out endPosHit, float.MaxValue, fieldLayer.value)) {
+            Debug.LogError("did not hit field");
             return;
         }
 
@@ -52,11 +77,15 @@ public class BallBehaviour : MonoBehaviour {
 
         ballRigidbody.AddForce(pushPower * worldDirection.normalized);
         OnShoot?.Invoke();
-        shot = true;
+
+        alreadyShot = true;
+        ballCanvas.Deactivate();
     }
 
     private void OnDestroy() {
         swipeHelper.OnSwipe -= Shoot;
+        swipeHelper.OnRelease -= ReleaseBall;
+        ballCanvas.OnSelect -= SetBallHeld;
     }
 
 }

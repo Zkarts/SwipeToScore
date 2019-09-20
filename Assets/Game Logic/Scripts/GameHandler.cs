@@ -18,10 +18,13 @@ public class GameHandler : MonoBehaviour {
     private SwipeHelper swipeHelper;
 
     [SerializeField]
+    private BallCanvas ballCanvas;
+
+    [SerializeField]
     private Camera mainCamera;
 
     [SerializeField]
-    private float fieldWidth = 5f;
+    private float fieldWidth = 4.5f;
 
     [Header("Goal size parameters")]
     [SerializeField]
@@ -37,17 +40,20 @@ public class GameHandler : MonoBehaviour {
     [SerializeField]
     private BallBehaviour currentBall;
 
-    private float elapsedTime = 0f;
-    private float goalDistance;
+    private float goalDistance, ballDistance, ballPosY;
     private Vector3 ballPosition;
     private bool scored = false;
 
     private void Start() {
         goalDistance = currentGoal.transform.position.z;
-        ballPosition = currentBall.transform.position;
 
-        currentBall.Init(this, swipeHelper, currentGoal.GoalTrigger, mainCamera);
+        ballPosition = currentBall.transform.position;
+        ballDistance = currentBall.transform.position.z;
+        ballPosY = currentBall.transform.position.y;
+
+        currentBall.Init(this, ballCanvas, swipeHelper, currentGoal.GoalTrigger, mainCamera);
         currentBall.OnShoot += Shoot;
+
         swipeToScoreUI.Init();
         swipeToScoreUI.OnRetry += Reload;
     }
@@ -90,10 +96,17 @@ public class GameHandler : MonoBehaviour {
 
     private void SpawnBall() {
         currentBall = Instantiate<BallBehaviour>(ballPrefab);
+
+        if (scored) {
+            float ballPosX = Random.Range(-0.5f * fieldWidth, 0.5f * fieldWidth);
+            ballPosition = new Vector3(ballPosX, ballPosY, ballDistance);
+        }
         currentBall.transform.position = ballPosition;
 
         currentBall.OnShoot += Shoot;
-        currentBall.Init(this, swipeHelper, currentGoal.GoalTrigger, mainCamera);
+        currentBall.Init(this, ballCanvas, swipeHelper, currentGoal.GoalTrigger, mainCamera);
+
+        ballCanvas.Init(currentBall);
     }
 
 }

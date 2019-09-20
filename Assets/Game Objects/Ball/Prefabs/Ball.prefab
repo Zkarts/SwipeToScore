@@ -106,6 +106,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 350f78f152ab7fd4f87a07701d6d5e51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fieldLayer:
+    serializedVersion: 2
+    m_Bits: 512
   pushPower: 500
 --- !u!54 &5374481961357315597
 Rigidbody:
