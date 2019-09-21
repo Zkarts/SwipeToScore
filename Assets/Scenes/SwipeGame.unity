@@ -217,19 +217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shootState: {fileID: 1357480549}
   swipeUI: {fileID: 1856408391}
-  swipeHelper: {fileID: 546586006}
-  ballCanvas: {fileID: 1910406881}
-  mainCamera: {fileID: 1050654062}
-  goalPrefab: {fileID: 1065251945790231804, guid: 9c7dc13cc9f7b524f8ce65342c9f6cf9,
-    type: 3}
-  ballPrefab: {fileID: 3911833641152487605, guid: ba10a595ff7eed44e98ad858d41810c3,
-    type: 3}
-  minWidth: 0
-  maxWidth: 4
-  minHeight: 0
-  maxHeight: 2
-  fieldWidth: 4.5
-  currentGoal: {fileID: 1983136097}
+  levelGenerator: {fileID: 1895607461}
 --- !u!4 &315164966
 Transform:
   m_ObjectHideFlags: 0
@@ -356,7 +344,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &546586006
 MonoBehaviour:
@@ -468,7 +456,7 @@ RectTransform:
   - {fileID: 515833572}
   - {fileID: 1998406935}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -504,7 +492,58 @@ Transform:
   m_Children:
   - {fileID: 1952878243}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &611627605
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 611627607}
+  - component: {fileID: 611627606}
+  m_Layer: 0
+  m_Name: ObstacleManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &611627606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 611627605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 826736375903ae04c9fdbe274e3cdd6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boxObstacle: {fileID: 7451937618622821014, guid: 128dd7b0982691643b4b2f12df00f466,
+    type: 3}
+  cylinderObstacle: {fileID: 6278084992372613642, guid: 77d7b4d08ec5e8b478df6bb6a0defaf3,
+    type: 3}
+  minDistance: 4
+  maxDistance: 8.5
+  fieldWidth: 4.5
+  minDistanceBetweenObstacles: 1.5
+--- !u!4 &611627607
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 611627605}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.35253316, y: -2.3457446, z: 2.2179136}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1895607462}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &616537237
 GameObject:
@@ -551,18 +590,6 @@ Transform:
   m_Father: {fileID: 1748003757}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &639454120 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3911833641152487605, guid: ba10a595ff7eed44e98ad858d41810c3,
-    type: 3}
-  m_PrefabInstance: {fileID: 3911833641789713181}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 350f78f152ab7fd4f87a07701d6d5e51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &658717748
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -613,7 +640,7 @@ PrefabInstance:
     - target: {fileID: 1065251945790231805, guid: 9c7dc13cc9f7b524f8ce65342c9f6cf9,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1065251945790231805, guid: 9c7dc13cc9f7b524f8ce65342c9f6cf9,
         type: 3}
@@ -930,7 +957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   costText: {fileID: 1786138275}
-  cost: 5
+  cost: 3
   unlockLevel: 1
   ballType: 1
 --- !u!1 &811692190
@@ -1077,7 +1104,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   costText: {fileID: 1677254280}
   cost: 3
-  unlockLevel: 1
+  unlockLevel: -1
   ballType: 2
 --- !u!1 &880306733
 GameObject:
@@ -2769,10 +2796,6 @@ MonoBehaviour:
   - {fileID: 315164965}
   - {fileID: 1357480549}
   - {fileID: 616537238}
-  CurrentBall: {fileID: 639454120}
-  Scored: 0
-  Level: 1
-  Attempts: 0
 --- !u!4 &1748003757
 Transform:
   m_ObjectHideFlags: 0
@@ -2788,7 +2811,7 @@ Transform:
   - {fileID: 1357480550}
   - {fileID: 616537239}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1786138273
 GameObject:
@@ -3193,6 +3216,65 @@ MonoBehaviour:
   levelText: {fileID: 692271009}
   attemptsText: {fileID: 880306735}
   abilityButtonContainer: {fileID: 1963443845}
+--- !u!1 &1895607460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1895607462}
+  - component: {fileID: 1895607461}
+  m_Layer: 0
+  m_Name: LevelGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1895607461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1895607460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3f4511a584e4b64eb4994550383dab8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useObstacles: 1
+  obstacleManager: {fileID: 611627606}
+  swipeHelper: {fileID: 546586006}
+  ballCanvas: {fileID: 1910406881}
+  mainCamera: {fileID: 1050654062}
+  goalPrefab: {fileID: 1065251945790231804, guid: 9c7dc13cc9f7b524f8ce65342c9f6cf9,
+    type: 3}
+  ballPrefab: {fileID: 3911833641152487605, guid: ba10a595ff7eed44e98ad858d41810c3,
+    type: 3}
+  minWidth: 1
+  maxWidth: 4
+  minHeight: 1
+  maxHeight: 2
+  fieldWidth: 4.5
+  currentGoal: {fileID: 1983136097}
+--- !u!4 &1895607462
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1895607460}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.0887331, y: 2.7548025, z: -1.9066496}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 611627607}
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1910406876
 GameObject:
   m_ObjectHideFlags: 0
@@ -3286,7 +3368,7 @@ RectTransform:
   m_Children:
   - {fileID: 1564611134}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3644,7 +3726,7 @@ PrefabInstance:
     - target: {fileID: 3911833641152487610, guid: ba10a595ff7eed44e98ad858d41810c3,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3911833641152487610, guid: ba10a595ff7eed44e98ad858d41810c3,
         type: 3}

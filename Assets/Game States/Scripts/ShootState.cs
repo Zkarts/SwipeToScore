@@ -22,17 +22,17 @@ public class ShootState : SwipeToScoreState {
     }
 
     private void Score() {
-        stateMachine.Scored = true;
+        gameData.Scored = true;
         stateMachine.ChangeState(scoreState);
     }
 
     public override void EnterState() {
         shootUI.Activate();
-        stateMachine.CurrentBall.OnScore += Score;
+        gameData.CurrentBall.OnScore += Score;
     }
 
     public override void ExitState() {
-        stateMachine.CurrentBall.OnScore -= Score;
+        gameData.CurrentBall.OnScore -= Score;
         shootUI.Deactivate();
     }
 

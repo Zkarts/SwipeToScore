@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody), typeof(SphereCollider))]
 public class BallBehaviour : MonoBehaviour {
 
+    private const string obstacleLayerName = "Obstacle";
+
     [SerializeField]
     private LayerMask fieldLayer;
 
@@ -20,6 +22,7 @@ public class BallBehaviour : MonoBehaviour {
     private Rigidbody ballRigidbody;
     private Camera mainCamera;
     private bool holdingBall = false, alreadyShot = false;
+    private int obstacleLayer;
     private BallType ballType;
 
     public bool AlreadyShot {
@@ -40,6 +43,12 @@ public class BallBehaviour : MonoBehaviour {
         ballCanvas.Init(this);
         ballCanvas.Activate();
         ballCanvas.OnSelect += SetBallHeld;
+
+        obstacleLayer = LayerMask.NameToLayer(obstacleLayerName);
+
+
+
+        SetBallType(BallType.Fireball);
     }
 
     private void SetBallType(BallType ballType) {
@@ -47,16 +56,26 @@ public class BallBehaviour : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision collision) {
-        if (ballType == BallType.Fireball) {
-            Destroy(collision.collider.gameObject);
-            Destroy(gameObject);
+        GameObject otherObj = collision.collider.gameObject;
+
+        if (ballType == BallType.Fireball && otherObj.layer == obstacleLayer) {
+            Obstacle obstacle = collision.collider.GetComponent<Obstacle>();
+
+            if (obstacle == null) {
+                Debug.LogError("Could not find obstacle script on collision!");
+                Destroy(otherObj);
+            }
+            else {
+                obstacle.Destroy();
+            }
+
+            Destroy(this.gameObject); //TODO: imagine cool fireball effects
         }
     }
 
     private void OnTriggerEnter(Collider other) {
         if (other == goalTrigger) {
             OnScore?.Invoke();
-            //gameHandler.Score();
         }
     }
 
@@ -79,6 +98,7 @@ public class BallBehaviour : MonoBehaviour {
             return;
         }
 
+        //cast a ray to find the target position on the field
         Ray endPosRay = mainCamera.ScreenPointToRay(screenSpacePosition);
         RaycastHit endPosHit;
 

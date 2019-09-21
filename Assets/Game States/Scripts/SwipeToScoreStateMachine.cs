@@ -11,18 +11,16 @@ public class SwipeToScoreStateMachine : MonoBehaviour {
 
     private SwipeToScoreState activeState;
 
-    public BallBehaviour CurrentBall;
+    private GameData gameData = new GameData();
 
-    //we don't want to edit these values in the Inspector
-    [HideInInspector]
-    public bool Scored = false;
-    [HideInInspector]
-    public int Level = 1, Attempts = 0;
+    public GameData GameData {
+        get { return gameData; }
+    }
 
     private void Start() {
         //Make sure we start with the current ball set
-        if (CurrentBall == null) {
-            CurrentBall = GameObject.FindObjectOfType<BallBehaviour>();
+        if (gameData.CurrentBall == null) {
+            gameData.CurrentBall = GameObject.FindObjectOfType<BallBehaviour>();
         }
 
         foreach (SwipeToScoreState state in allStates) {
