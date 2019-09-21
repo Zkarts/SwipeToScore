@@ -12,17 +12,21 @@ public class BallBehaviour : MonoBehaviour {
     private float pushPower = 500;
 
     public event Action OnShoot;
+    public event Action OnScore;
 
-    private GameHandler gameHandler;
     private BallCanvas ballCanvas;
     private SwipeHelper swipeHelper;
     private BoxCollider goalTrigger;
     private Rigidbody ballRigidbody;
     private Camera mainCamera;
     private bool holdingBall = false, alreadyShot = false;
+    private BallType ballType;
 
-    public void Init(GameHandler gameHandler, BallCanvas ballCanvas, SwipeHelper swipeHelper, BoxCollider goalTrigger, Camera mainCamera) {
-        this.gameHandler = gameHandler;
+    public bool AlreadyShot {
+        get { return alreadyShot; }
+    }
+
+    public void Init(BallCanvas ballCanvas, SwipeHelper swipeHelper, BoxCollider goalTrigger, Camera mainCamera) {
         this.swipeHelper = swipeHelper;
         this.goalTrigger = goalTrigger;
         this.mainCamera = mainCamera;
@@ -38,9 +42,21 @@ public class BallBehaviour : MonoBehaviour {
         ballCanvas.OnSelect += SetBallHeld;
     }
 
+    private void SetBallType(BallType ballType) {
+        this.ballType = ballType;
+    }
+
+    private void OnCollisionEnter(Collision collision) {
+        if (ballType == BallType.Fireball) {
+            Destroy(collision.collider.gameObject);
+            Destroy(gameObject);
+        }
+    }
+
     private void OnTriggerEnter(Collider other) {
         if (other == goalTrigger) {
-            gameHandler.Score();
+            OnScore?.Invoke();
+            //gameHandler.Score();
         }
     }
 

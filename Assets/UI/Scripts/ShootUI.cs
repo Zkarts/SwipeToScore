@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class ScoreUI : MonoBehaviour {
+public class ShootUI : MonoBehaviour {
 
     //redirect to retryButton
     public event Action OnRetry {
@@ -14,11 +14,8 @@ public class ScoreUI : MonoBehaviour {
     }
 
     [SerializeField]
-    private TextMeshProUGUI goalText;
-
-    [SerializeField]
     private RetryButton retryButton;
-
+    
     public void Init() {
         retryButton.Init();
         Deactivate();
@@ -31,6 +28,7 @@ public class ScoreUI : MonoBehaviour {
 
     public void Deactivate() {
         gameObject.SetActive(false);
+        retryButton.Deactivate();
     }
 
 }
