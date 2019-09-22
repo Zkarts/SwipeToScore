@@ -30,7 +30,7 @@ public class GameData {
     }
 
     public void PayForBallType() {
-        attempts -= CurrentBall.BallType.ToCost();
+        attempts -= CurrentBall.BallType.GetCost();
     }
 
 }

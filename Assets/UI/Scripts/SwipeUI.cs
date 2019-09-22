@@ -16,6 +16,9 @@ public class SwipeUI : MonoBehaviour {
     private TextMeshProUGUI levelText, attemptsText;
 
     [SerializeField]
+    private TextMeshProUGUI tutorialText;
+
+    [SerializeField]
     private AbilityButtonContainer abilityButtonContainer;
 
     public void Init() {
@@ -28,9 +31,17 @@ public class SwipeUI : MonoBehaviour {
         gameObject.SetActive(true);
         abilityButtonContainer.Activate(level, attempts);
         UpdateStatsText(level, attempts);
+        UpdateTutorialText(level, attempts);
 
         //don't show "Attempt Token" text without skills to use them for
         attemptsText.gameObject.SetActive(abilityButtonContainer.IsAnyUnlocked);
+    }
+
+    private void UpdateTutorialText(int level, int attempts) {
+        tutorialText.text = "Swipe the ball into the goal!";
+        if (level >= BallType.Fireball.GetUnlockLevel() && attempts >= BallType.Fireball.GetCost()) {
+            tutorialText.text += "\n\nUse the fireball to get rid of obstacles!";
+        }
     }
 
     public void UpdateStatsText(int level, int attempts) {

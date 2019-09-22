@@ -8,7 +8,7 @@ public enum BallType {
 
 public static class BallTypeExtensions {
 
-    public static int ToCost(this BallType ballType) {
+    public static int GetCost(this BallType ballType) {
         switch (ballType) {
             case BallType.Normal:
                 return 0;
@@ -20,6 +20,21 @@ public static class BallTypeExtensions {
                 return 4;
             default:
                 return 0;
+        }
+    }
+
+    public static int GetUnlockLevel(this BallType ballType) {
+        switch (ballType) {
+            case BallType.Normal:
+                return 0;
+            case BallType.Fireball:
+                return 5;
+            case BallType.SmallBall:
+                return -1;
+            case BallType.SplitBall:
+                return -1;
+            default:
+                return -1;
         }
     }
 
