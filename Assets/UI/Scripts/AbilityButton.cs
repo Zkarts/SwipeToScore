@@ -22,7 +22,7 @@ public class AbilityButton : MonoBehaviour {
     private TextMeshProUGUI costText;
 
     [SerializeField]
-    private int cost, unlockLevel = -1;
+    private int unlockLevel = -1;
 
     [SerializeField]
     private BallType ballType;
@@ -32,6 +32,10 @@ public class AbilityButton : MonoBehaviour {
 
     public BallType BallType {
         get { return ballType; }
+    }
+    
+    public bool IsUnlocked {
+        get { return isUnlocked; }
     }
 
     public void Click() {
@@ -46,7 +50,7 @@ public class AbilityButton : MonoBehaviour {
     }
 
     public void Init() {
-        costText.text = cost.ToString();
+        costText.text = ballType.ToCost().ToString();
         button = GetComponent<Button>();
     }
 
@@ -60,7 +64,7 @@ public class AbilityButton : MonoBehaviour {
         }
 
         gameObject.SetActive(true);
-        if (attemptTokens >= cost) {
+        if (attemptTokens >= ballType.ToCost()) {
             costText.color = costTextEnabledColor;
             button.interactable = true;
         }

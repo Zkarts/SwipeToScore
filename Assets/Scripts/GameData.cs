@@ -29,4 +29,8 @@ public class GameData {
         attempts = 0;
     }
 
+    public void PayForBallType() {
+        attempts -= CurrentBall.BallType.ToCost();
+    }
+
 }

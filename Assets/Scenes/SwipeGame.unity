@@ -957,8 +957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   costText: {fileID: 1786138275}
-  cost: 3
-  unlockLevel: 1
+  unlockLevel: 5
   ballType: 1
 --- !u!1 &811692190
 GameObject:
@@ -1103,7 +1102,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   costText: {fileID: 1677254280}
-  cost: 3
   unlockLevel: -1
   ballType: 2
 --- !u!1 &880306733
@@ -2057,7 +2055,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   costText: {fileID: 966844013}
-  cost: 10
   unlockLevel: -1
   ballType: 3
 --- !u!1 &1547558387

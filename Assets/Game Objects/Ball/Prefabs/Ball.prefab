@@ -109,10 +109,9 @@ MonoBehaviour:
   fieldLayer:
     serializedVersion: 2
     m_Bits: 512
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 2048
   pushPower: 500
+  normalBallMaterial: {fileID: 2100000, guid: bcba30adfdb3ea146a402437d9041601, type: 2}
+  fireballMaterial: {fileID: 2100000, guid: 8ebfb781b1330c142b8ba51af358dbe3, type: 2}
 --- !u!54 &5374481961357315597
 Rigidbody:
   m_ObjectHideFlags: 0

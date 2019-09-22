@@ -18,6 +18,17 @@ public class AbilityButtonContainer : MonoBehaviour {
         get { return abilityButtons; }
     }
 
+    public bool IsAnyUnlocked {
+        get {
+            foreach (AbilityButton abilityButton in abilityButtons) {
+                if (abilityButton.IsUnlocked) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
     public void Init() {
         foreach (AbilityButton abilityButton in abilityButtons) {
             abilityButton.Init();
@@ -27,6 +38,9 @@ public class AbilityButtonContainer : MonoBehaviour {
     }
 
     public void Activate(int level, int attemptTokens) {
+        if (activeButton != null) {
+            UpdateBallType(false, activeButton);
+        }
         gameObject.SetActive(true);
         foreach (AbilityButton abilityButton in abilityButtons) {
             abilityButton.Activate(level, attemptTokens);
@@ -49,6 +63,7 @@ public class AbilityButtonContainer : MonoBehaviour {
         }
 
         if (!turnOn && abilityButton == activeButton) {
+            activeButton.SetSelected(false);
             activeButton = null;
             OnBallTypeChanged?.Invoke(BallType.Normal);
         }

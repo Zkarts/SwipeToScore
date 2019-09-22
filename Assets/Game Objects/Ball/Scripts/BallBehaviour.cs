@@ -2,10 +2,13 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody), typeof(SphereCollider))]
+[RequireComponent(typeof(Rigidbody), typeof(SphereCollider), typeof(MeshRenderer))]
 public class BallBehaviour : MonoBehaviour {
 
     private const string obstacleLayerName = "Obstacle";
+
+    public event Action OnShoot;
+    public event Action OnScore;
 
     [SerializeField]
     private LayerMask fieldLayer;
@@ -13,8 +16,10 @@ public class BallBehaviour : MonoBehaviour {
     [SerializeField]
     private float pushPower = 500;
 
-    public event Action OnShoot;
-    public event Action OnScore;
+    [SerializeField]
+    private Material normalBallMaterial, fireballMaterial;
+
+    private MeshRenderer meshRenderer;
 
     private BallCanvas ballCanvas;
     private SwipeHelper swipeHelper;
@@ -29,12 +34,17 @@ public class BallBehaviour : MonoBehaviour {
         get { return alreadyShot; }
     }
 
+    public BallType BallType {
+        get { return ballType; }
+    }
+
     public void Init(BallCanvas ballCanvas, SwipeHelper swipeHelper, BoxCollider goalTrigger, Camera mainCamera) {
         this.swipeHelper = swipeHelper;
         this.goalTrigger = goalTrigger;
         this.mainCamera = mainCamera;
 
         ballRigidbody = GetComponent<Rigidbody>();
+        meshRenderer = GetComponent<MeshRenderer>();
 
         swipeHelper.OnSwipe += Shoot;
         swipeHelper.OnRelease += ReleaseBall;
@@ -45,14 +55,24 @@ public class BallBehaviour : MonoBehaviour {
         ballCanvas.OnSelect += SetBallHeld;
 
         obstacleLayer = LayerMask.NameToLayer(obstacleLayerName);
-
-
-
-        SetBallType(BallType.Fireball);
     }
 
-    private void SetBallType(BallType ballType) {
+    public void SetBallType(BallType ballType) {
         this.ballType = ballType;
+
+        //TODO: make a factory for this if it gets expanded
+        switch (ballType) {
+            case BallType.Normal:
+                meshRenderer.material = normalBallMaterial;
+                break;
+            case BallType.Fireball:
+                meshRenderer.material = fireballMaterial;
+                break;
+            case BallType.SmallBall:
+            case BallType.SplitBall:
+            default:
+                break;
+        }
     }
 
     private void OnCollisionEnter(Collision collision) {

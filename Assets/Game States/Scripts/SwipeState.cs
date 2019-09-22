@@ -21,10 +21,17 @@ public class SwipeState : SwipeToScoreState {
         gameData.CurrentBall.OnShoot += Shoot;
 
         swipeUI.Init();
+        swipeUI.OnBallTypeChanged += SetBallType;
     }
 
     private void Shoot() {
+        gameData.PayForBallType();
+        swipeUI.UpdateStatsText(gameData.Level, gameData.Attempts);
         stateMachine.ChangeState(shootState);
+    }
+
+    private void SetBallType(BallType ballType) {
+        gameData.CurrentBall.SetBallType(ballType);
     }
 
     public override void EnterState() {
